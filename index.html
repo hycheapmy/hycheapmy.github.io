@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HYCHEAP Jasa Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: empat halaman dalam satu file, berpindah lewat hash (#jasa, #cara-kerja, #tentang, #kontak). Kolom 1080px, grid tipis, panel gaya terminal. */
+:root {
+  --bg: #060908;
+  --panel: #0c1210;
+  --line: #1a2622;
+  --text: #e8f2ee;
+  --muted: #8ea39b;
+  --green: #2ee6a6;
+  --green-dim: #0f3d2f;
+  --font-display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px; background-position: -1px -1px;
+}
+body::before { content: ""; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 0%, transparent 0%, var(--bg) 70%); pointer-events: none; z-index: 0; }
+.wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 4px; }
+
+header.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.logo { font-family: var(--font-display); font-weight: 800; letter-spacing: 0.04em; font-size: 20px; text-decoration: none; }
+.logo span { color: var(--green); }
+nav.links { display: flex; gap: 6px; flex-wrap: wrap; }
+nav.links a { text-decoration: none; color: var(--muted); font-size: 15px; padding: 7px 14px; border-radius: 8px; border: 1px solid transparent; }
+nav.links a:hover { color: var(--text); }
+nav.links a[aria-current="page"] { color: var(--green); border-color: var(--green-dim); background: rgba(46,230,166,0.06); }
+
+.page { display: none; padding-bottom: 40px; }
+.page.on { display: block; }
+
+.hero { padding: 56px 0 56px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 13px; color: var(--green); border: 1px solid var(--green-dim); background: rgba(46,230,166,0.06); padding: 6px 14px; border-radius: 999px; }
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); display: inline-block; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(36px, 6.5vw, 68px); line-height: 1.06; letter-spacing: -0.02em; margin: 22px 0 20px; text-wrap: balance; max-width: 16ch; }
+h1.sm { font-size: clamp(32px, 5.5vw, 52px); max-width: 20ch; }
+h1 em { font-style: normal; color: var(--green); }
+.lead { max-width: 58ch; color: var(--muted); font-size: 19px; margin: 0 0 30px; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-block; text-decoration: none; font-weight: 700; font-size: 16px; padding: 13px 24px; border-radius: 10px; border: 1px solid var(--green); background: var(--green); color: #031510; transition: transform .15s, box-shadow .15s; cursor: pointer; font-family: var(--font-body); }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(46,230,166,0.25); }
+.btn.ghost { background: transparent; color: var(--green); }
+
+.pagehead { padding: 48px 0 8px; }
+section { padding: 40px 0; border-top: 1px solid var(--line); }
+section.first { border-top: 0; padding-top: 8px; }
+.eyebrow { font-family: var(--font-mono); color: var(--green); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 10px; }
+h2 { font-family: var(--font-display); font-size: clamp(24px, 3.6vw, 34px); line-height: 1.15; margin: 0 0 14px; text-wrap: balance; letter-spacing: -0.01em; }
+h3 { font-family: var(--font-display); font-size: 19px; margin: 0 0 8px; }
+.sub { color: var(--muted); max-width: 62ch; margin: 0 0 28px; }
+
+.stack { display: grid; gap: 16px; }
+.svc { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 26px; display: grid; grid-template-columns: 56px 1fr; gap: 18px; transition: border-color .2s; }
+.svc:hover { border-color: var(--green-dim); }
+.ico { width: 44px; height: 44px; color: var(--green); }
+.svc p { color: var(--muted); margin: 0 0 14px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+.cols h4 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin: 0 0 8px; font-weight: 600; }
+ul.dots { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: 15.5px; color: var(--text); }
+ul.dots li { padding-left: 18px; position: relative; }
+ul.dots li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 7px; height: 2px; background: var(--green); }
+ul.dots.no li::before { background: #ff7a7a; }
+
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.card p { color: var(--muted); margin: 0; font-size: 16px; }
+.num { font-family: var(--font-mono); color: var(--green); border: 1px solid var(--green-dim); border-radius: 8px; width: 38px; height: 38px; display: grid; place-items: center; font-weight: 600; margin-bottom: 14px; }
+
+.work { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.panel-head b { color: var(--green); font-weight: 600; }
+.panel-body { padding: 18px; }
+.form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); font-family: var(--font-mono); }
+.form input { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-family: var(--font-mono); font-size: 15px; }
+.form input:focus { border-color: var(--green); outline: none; }
+.out { margin-top: 16px; border-top: 1px dashed var(--line); padding-top: 14px; display: grid; gap: 8px; font-family: var(--font-mono); font-size: 14px; }
+.out div { display: flex; justify-content: space-between; gap: 12px; }
+.out span { color: var(--muted); }
+.out strong { color: var(--green); font-weight: 600; text-align: right; }
+.out .warn { color: #ffb86b; }
+.note { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
+.sheet-wrap { overflow-x: auto; }
+table.sheet { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+.sheet th, .sheet td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.sheet th:first-child, .sheet td:first-child { text-align: left; }
+.sheet th { color: var(--muted); font-weight: 400; }
+.pos { color: var(--green); }
+.neg { color: #ff7a7a; }
+.sample p { margin: 0 0 12px; color: var(--text); font-size: 16px; }
+.sample p:last-child { margin-bottom: 0; }
+
+.prose { display: grid; gap: 16px; max-width: 66ch; }
+.prose p { margin: 0; color: var(--muted); }
+.prose strong { color: var(--text); font-weight: 500; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.fact { border-left: 2px solid var(--green); padding: 2px 0 2px 16px; }
+.fact b { display: block; font-family: var(--font-display); font-size: 17px; margin-bottom: 4px; }
+.fact span { color: var(--muted); font-size: 15.5px; }
+
+.contact-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.contact-empty { font-family: var(--font-mono); font-size: 14px; color: var(--muted); border: 1px dashed var(--green-dim); border-radius: 10px; padding: 14px 18px; display: inline-block; }
+pre.brief { margin: 0; white-space: pre-wrap; font-family: var(--font-mono); font-size: 14px; color: var(--text); line-height: 1.7; }
+.copied { font-family: var(--font-mono); font-size: 13px; color: var(--green); margin-left: 8px; }
+
+footer { padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--font-mono); }
+
+@media (max-width: 560px) { .form { grid-template-columns: 1fr; } .svc { grid-template-columns: 1fr; } .hero { padding-top: 32px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="logo" href="#jasa">HY<span>CHEAP</span></a>
+    <nav class="links" aria-label="Navigasi utama">
+      <a href="#jasa" data-nav="jasa">Jasa</a>
+      <a href="#cara-kerja" data-nav="cara-kerja">Cara kerja</a>
+      <a href="#tentang" data-nav="tentang">Tentang</a>
+      <a href="#kontak" data-nav="kontak">Kontak</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HALAMAN 1: JASA -->
+    <div class="page" id="p-jasa">
+      <div class="hero">
+        <span class="chip"><i></i>Terima proyek baru</span>
+        <h1>Website, tulisan, dan data yang <em>rapi</em>.</h1>
+        <p class="lead">Saya HYCHEAP. Saya membantu usaha kecil dan pelaku online punya halaman web sederhana, konten yang jelas, dan spreadsheet yang mudah dipakai. Cepat, jelas, dan bisa direvisi.</p>
+        <div class="cta">
+          <a class="btn" href="#kontak">Mulai proyek</a>
+          <a class="btn ghost" href="#cara-kerja">Lihat cara kerja dan contoh</a>
+        </div>
+      </div>
+
+      <section>
+        <p class="eyebrow">Jasa</p>
+        <h2>Tiga jasa, masing-masing dengan batas yang jelas</h2>
+        <p class="sub">Setiap jasa saya jelaskan apa yang kamu dapat, apa yang tidak termasuk, dan untuk siapa cocoknya, supaya tidak ada kejutan di tengah jalan.</p>
+
+        <div class="stack">
+          <article class="svc">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 14h6"/></svg>
+            <div>
+              <h3>1. Website satu halaman</h3>
+              <p>Landing page untuk usaha, jasa, atau profil pribadi, tampil rapi di HP dan komputer.</p>
+              <div class="cols">
+                <div><h4>Yang kamu dapat</h4>
+                  <ul class="dots"><li>Desain responsif sesuai warna usahamu</li><li>Bagian jasa atau produk, tentang, dan kontak</li><li>Tombol WhatsApp yang langsung terbuka</li><li>Revisi kecil sampai sesuai kesepakatan</li></ul></div>
+                <div><h4>Cocok untuk</h4>
+                  <ul class="dots"><li>Warung, kafe, dan toko kecil</li><li>Jasa servis dan freelancer</li><li>Acara atau promo singkat</li></ul></div>
+                <div><h4>Tidak termasuk</h4>
+                  <ul class="dots no"><li>Pembelian domain dan hosting</li><li>Sistem pembayaran atau login pengguna</li></ul></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="svc">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>
+            <div>
+              <h3>2. Artikel dan konten</h3>
+              <p>Tulisan berbahasa Indonesia yang jelas dan enak dibaca. Topik pasar dan keuangan juga bisa saya kerjakan.</p>
+              <div class="cols">
+                <div><h4>Yang kamu dapat</h4>
+                  <ul class="dots"><li>Artikel edukasi atau blog</li><li>Deskripsi produk dan caption</li><li>Gaya bahasa disesuaikan dengan audiensmu</li><li>Revisi kecil setelah draf pertama</li></ul></div>
+                <div><h4>Cocok untuk</h4>
+                  <ul class="dots"><li>Blog yang butuh konten rutin</li><li>Toko online dengan banyak produk</li><li>Komunitas atau channel edukasi</li></ul></div>
+                <div><h4>Tidak termasuk</h4>
+                  <ul class="dots no"><li>Janji peringkat Google tertentu</li><li>Saran investasi atau sinyal trading</li></ul></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="svc">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16M15 4v16"/></svg>
+            <div>
+              <h3>3. Spreadsheet dan tracker</h3>
+              <p>Data mentah yang berantakan dirapikan, atau dibuatkan tracker baru yang menghitung sendiri.</p>
+              <div class="cols">
+                <div><h4>Yang kamu dapat</h4>
+                  <ul class="dots"><li>Tabel rapi dengan format seragam</li><li>Rumus otomatis (total, saldo, persentase)</li><li>Tracker: jurnal, keuangan, stok, jadwal</li><li>Cara pakai singkat di sheet terpisah</li></ul></div>
+                <div><h4>Cocok untuk</h4>
+                  <ul class="dots"><li>Pencatatan usaha kecil</li><li>Jurnal trading dan keuangan pribadi</li><li>Data yang menumpuk dan sulit dibaca</li></ul></div>
+                <div><h4>Tidak termasuk</h4>
+                  <ul class="dots no"><li>Aplikasi atau database khusus</li><li>Input data dalam jumlah sangat besar</li></ul></div>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="cta" style="margin-top:28px"><a class="btn" href="#kontak">Tanyakan jasa ini</a></div>
+      </section>
+    </div>
+
+    <!-- HALAMAN 2: CARA KERJA + CONTOH KERJA -->
+    <div class="page" id="p-cara-kerja">
+      <div class="pagehead">
+        <p class="eyebrow">Cara kerja</p>
+        <h1 class="sm">Alurnya jelas dari awal sampai <em>serah terima</em></h1>
+        <p class="lead">Kamu selalu tahu apa yang sedang dikerjakan dan kapan hasilnya dikirim.</p>
+      </div>
+
+      <section class="first">
+        <div class="grid2">
+          <div class="card"><div class="num">01</div><h3>Diskusi</h3><p>Kamu jelaskan kebutuhan lewat chat. Saya tanyakan hal penting, lalu kita sepakati isi pekerjaan, estimasi waktu, dan harga.</p></div>
+          <div class="card"><div class="num">02</div><h3>Pengerjaan</h3><p>Saya kerjakan dengan bantuan AI untuk mempercepat. Seluruh hasilnya saya baca dan periksa sendiri.</p></div>
+          <div class="card"><div class="num">03</div><h3>Draf dan revisi</h3><p>Draf pertama dikirim lebih dulu. Kamu beri masukan, saya perbaiki sampai sesuai kesepakatan.</p></div>
+          <div class="card"><div class="num">04</div><h3>Serah terima</h3><p>File atau link diserahkan lengkap dengan penjelasan singkat cara memakainya.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <p class="eyebrow">Contoh kerja</p>
+        <h2>Contoh yang bisa langsung dicoba</h2>
+        <p class="sub">Semua ini proyek contoh buatan sendiri untuk menunjukkan gaya kerja saya, bukan pekerjaan klien. Website yang sedang kamu lihat ini juga contoh jasa nomor 1.</p>
+
+        <div class="work">
+          <div class="panel">
+            <div class="panel-head"><span>Contoh tool web</span><b>Kalkulator ukuran posisi</b></div>
+            <div class="panel-body">
+              <div class="form">
+                <label for="modal">Modal (USD)<input id="modal" type="number" min="0" step="any" value="500" inputmode="decimal"></label>
+                <label for="risk">Risiko per trade (%)<input id="risk" type="number" min="0" step="any" value="2" inputmode="decimal"></label>
+                <label for="entry">Harga entry<input id="entry" type="number" min="0" step="any" value="100" inputmode="decimal"></label>
+                <label for="sl">Harga stop loss<input id="sl" type="number" min="0" step="any" value="97" inputmode="decimal"></label>
+              </div>
+              <div class="out" id="out" aria-live="polite"></div>
+              <p class="note">Hanya hitungan matematika, bukan saran trading.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><span>Contoh spreadsheet (jasa 3)</span><b>Jurnal sederhana</b></div>
+            <div class="panel-body">
+              <div class="sheet-wrap">
+                <table class="sheet">
+                  <thead><tr><th>Tanggal</th><th>Aset</th><th>Hasil ($)</th><th>Saldo ($)</th></tr></thead>
+                  <tbody id="sheet"></tbody>
+                </table>
+              </div>
+              <p class="note">Data contoh. Saldo dan warna dihitung otomatis dari kolom hasil.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><span>Contoh tulisan (jasa 2)</span><b>Apa itu stop loss?</b></div>
+            <div class="panel-body sample">
+              <p>Stop loss adalah perintah otomatis untuk menutup posisi saat harga menyentuh batas kerugian yang sudah kamu tentukan sebelum masuk.</p>
+              <p>Fungsinya sederhana: membatasi rugi pada satu transaksi. Tanpa stop loss, keputusan menutup posisi bergantung pada perasaan saat harga bergerak melawan kamu, dan di situ biasanya kerugian membesar.</p>
+              <p>Tentukan stop loss dari struktur harga, lalu hitung ukuran posisi dari batas rugi yang sanggup kamu terima, bukan sebaliknya.</p>
+              <p class="note">Teks contoh edukasi umum, bukan saran investasi.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cta" style="margin-top:28px"><a class="btn" href="#kontak">Pesan proyek serupa</a></div>
+      </section>
+    </div>
+
+    <!-- HALAMAN 3: TENTANG -->
+    <div class="page" id="p-tentang">
+      <div class="pagehead">
+        <p class="eyebrow">Tentang</p>
+        <h1 class="sm">Siapa di balik <em>HYCHEAP</em></h1>
+        <p class="lead">Saya memakai nama HYCHEAP untuk jasa ini. Di bawah ini penjelasan jujur tentang latar saya, cara saya bekerja, dan batasannya.</p>
+      </div>
+
+      <section class="first">
+        <h2>Posisi saya sekarang</h2>
+        <div class="prose">
+          <p><strong>Saya sedang membangun portofolio.</strong> Halaman ini berisi proyek contoh, belum daftar klien, dan saya tidak akan memasang ulasan atau klien yang belum ada.</p>
+          <p>Untuk proyek pertama, saya menawarkan harga bersahabat dengan syarat saya boleh menampilkan hasilnya di portofolio dan meminta ulasan jujur setelah selesai.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Latar yang saya bawa</h2>
+        <div class="facts">
+          <div class="fact"><b>Terbiasa dengan data pasar</b><span>Saya aktif membaca pergerakan pasar dan menulis analisis, jadi nyaman dengan angka, tabel, dan grafik.</span></div>
+          <div class="fact"><b>Pencatatan yang disiplin</b><span>Saya terbiasa menyimpan jurnal dan mengecek hasil secara teratur, kebiasaan yang sama saya pakai saat memeriksa pekerjaan.</span></div>
+          <div class="fact"><b>Memegang aturan risiko</b><span>Di trading saya bekerja dengan batas rugi yang jelas. Di proyek, itu berarti ruang lingkup dan waktu disepakati dulu di awal.</span></div>
+          <div class="fact"><b>Belajar dengan praktik</b><span>Saya belajar lewat teori singkat lalu langsung dipraktikkan. Hasilnya bisa kamu lihat langsung di halaman contoh kerja.</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Cara saya memakai AI</h2>
+        <div class="prose">
+          <p>Saya memakai AI untuk menyusun draf website, tulisan, dan rumus spreadsheet dengan lebih cepat. <strong>Setiap hasil saya baca, uji, dan rapikan sendiri</strong> sebelum dikirim, supaya yang kamu terima bukan keluaran mentah.</p>
+          <p>Kalau proyekmu butuh sesuatu di luar kemampuan saya, saya katakan di awal. Lebih baik menolak daripada menjanjikan yang tidak bisa saya penuhi.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Yang saya kerjakan dan belum</h2>
+        <div class="cols" style="max-width:760px">
+          <div><h4>Bisa</h4>
+            <ul class="dots"><li>Website satu halaman</li><li>Artikel dan deskripsi produk</li><li>Spreadsheet dan tracker</li><li>Revisi kecil setelah draf</li></ul></div>
+          <div><h4>Belum bisa</h4>
+            <ul class="dots no"><li>Desain logo dan branding</li><li>Aplikasi dengan login atau database</li><li>Website banyak halaman dan toko online penuh</li><li>Saran investasi atau sinyal trading</li></ul></div>
+        </div>
+        <div class="cta" style="margin-top:28px"><a class="btn" href="#kontak">Hubungi saya</a></div>
+      </section>
+    </div>
+
+    <!-- HALAMAN 4: KONTAK -->
+    <div class="page" id="p-kontak">
+      <div class="pagehead">
+        <p class="eyebrow">Kontak</p>
+        <h1 class="sm">Ceritakan <em>kebutuhanmu</em></h1>
+        <p class="lead">Kirim pesan singkat tentang apa yang mau dibuat dan kapan dibutuhkan. Saya balas secepatnya.</p>
+      </div>
+
+      <section class="first">
+        <div class="contact-actions" id="contactActions"></div>
+      </section>
+
+      <section>
+        <h2>Supaya cepat dipahami, sertakan ini</h2>
+        <p class="sub">Salin format di bawah, isi, lalu kirim lewat kontak di atas.</p>
+        <div class="panel" style="max-width:640px">
+          <div class="panel-head"><span>Format pesan</span><span><button class="btn ghost" id="copyBtn" type="button" style="padding:6px 14px;font-size:14px">Salin</button><span class="copied" id="copied" role="status"></span></span></div>
+          <div class="panel-body"><pre class="brief" id="brief">Jasa yang dibutuhkan: (website / artikel / spreadsheet)
+Untuk apa: (usaha apa, tujuannya)
+Isi atau data yang sudah ada:
+Contoh yang kamu suka (link, jika ada):
+Batas waktu:
+Anggaran:</pre></div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>HYCHEAP</span>
+    <span>Dibuat dengan bantuan AI</span>
+  </footer>
+</div>
+
+<script>
+/* Isi kontak di sini. Kosongkan string untuk menyembunyikan tombolnya.
+   whatsapp: nomor dengan kode negara tanpa tanda plus, contoh "6281234567890" */
+var CONTACT = { whatsapp: "", email: "" };
+
+/* Navigasi antar halaman lewat hash */
+(function () {
+  var names = ["jasa", "cara-kerja", "tentang", "kontak"];
+  function show() {
+    var h = (location.hash || "").replace("#", "");
+    if (names.indexOf(h) === -1) h = "jasa";
+    names.forEach(function (n) {
+      document.getElementById("p-" + n).classList.toggle("on", n === h);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-nav]"), function (a) {
+      if (a.getAttribute("data-nav") === h) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", show);
+  show();
+})();
+
+/* Tombol kontak */
+(function () {
+  var box = document.getElementById("contactActions");
+  var any = false;
+  if (CONTACT.whatsapp) {
+    any = true;
+    var w = document.createElement("a");
+    w.className = "btn"; w.textContent = "Chat WhatsApp";
+    w.href = "https://wa.me/" + CONTACT.whatsapp + "?text=" + encodeURIComponent("Halo HYCHEAP, saya mau tanya soal jasa kamu.");
+    box.appendChild(w);
+  }
+  if (CONTACT.email) {
+    any = true;
+    var e = document.createElement("a");
+    e.className = "btn ghost"; e.textContent = CONTACT.email;
+    e.href = "mailto:" + CONTACT.email;
+    box.appendChild(e);
+  }
+  if (!any) {
+    var s = document.createElement("span");
+    s.className = "contact-empty";
+    s.textContent = "Kontak segera tersedia.";
+    box.appendChild(s);
+  }
+})();
+
+/* Salin format pesan */
+(function () {
+  var btn = document.getElementById("copyBtn");
+  var msg = document.getElementById("copied");
+  btn.addEventListener("click", function () {
+    var text = document.getElementById("brief").textContent;
+    var ok = function () { msg.textContent = "Tersalin"; setTimeout(function () { msg.textContent = ""; }, 2000); };
+    var fail = function () { msg.textContent = "Tidak bisa menyalin, blok teksnya manual"; };
+    try {
+      navigator.clipboard.writeText(text).then(ok, fail);
+    } catch (e) { fail(); }
+  });
+})();
+
+/* Kalkulator ukuran posisi */
+(function () {
+  var ids = ["modal", "risk", "entry", "sl"];
+  var out = document.getElementById("out");
+  function f(n, d) { return n.toLocaleString("id-ID", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function calc() {
+    var v = ids.map(function (i) { return parseFloat(document.getElementById(i).value); });
+    var modal = v[0], risk = v[1], entry = v[2], sl = v[3];
+    if (!(modal > 0) || !(risk > 0) || !(entry > 0) || !(sl > 0) || entry === sl) {
+      out.innerHTML = '<div><span>Hasil</span><strong class="warn">Isi semua kolom (entry dan SL harus beda)</strong></div>';
+      return;
+    }
+    var riskUsd = modal * risk / 100;
+    var dist = Math.abs(entry - sl);
+    var size = riskUsd / dist;
+    var notional = size * entry;
+    var lev = notional / modal;
+    var side = sl < entry ? "Long" : "Short";
+    out.innerHTML =
+      '<div><span>Arah</span><strong>' + side + '</strong></div>' +
+      '<div><span>Risiko maksimal</span><strong>$' + f(riskUsd, 2) + '</strong></div>' +
+      '<div><span>Jarak SL</span><strong>' + f(dist / entry * 100, 2) + '%</strong></div>' +
+      '<div><span>Ukuran posisi</span><strong>' + f(size, 4) + ' unit</strong></div>' +
+      '<div><span>Nilai posisi</span><strong>$' + f(notional, 2) + '</strong></div>' +
+      '<div><span>Leverage setara</span><strong>' + f(lev, 2) + 'x</strong></div>';
+  }
+  ids.forEach(function (i) { document.getElementById(i).addEventListener("input", calc); });
+  calc();
+})();
+
+/* Tabel jurnal contoh */
+(function () {
+  var rows = [["02 Nov", "BTC", 12.5], ["03 Nov", "ETH", -6.0], ["04 Nov", "SOL", 9.2], ["05 Nov", "BTC", -5.0], ["06 Nov", "HYPE", 14.8]];
+  var saldo = 500, html = "";
+  rows.forEach(function (r) {
+    saldo += r[2];
+    var cls = r[2] >= 0 ? "pos" : "neg";
+    var sign = r[2] >= 0 ? "+" : "";
+    html += "<tr><td>" + r[0] + "</td><td>" + r[1] + '</td><td class="' + cls + '">' + sign + r[2].toFixed(2) + "</td><td>" + saldo.toFixed(2) + "</td></tr>";
+  });
+  document.getElementById("sheet").innerHTML = html;
+})();
+</script>
+</body>
+</html>
